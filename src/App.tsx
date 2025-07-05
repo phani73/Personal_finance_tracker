@@ -124,29 +124,29 @@ function App() {
     }
   };
 
-  const handleUpdateBudget = async (id: string, updates: Partial<Budget>) => {
-    try {
-      console.log(`✏️ Updating budget ${id} with`, updates);
-      const updated = await budgetService.updateBudget(id, updates);
-      setBudgets(prev => prev.map(b => b._id === id ? updated : b));
-      toast({ title: "Budget updated", description: "Updated successfully." });
-    } catch (error) {
-      console.error('❌ Failed to update budget:', error);
-      toast({ title: "Error", description: "Failed to update budget.", variant: "destructive" });
-    }
-  };
+  // const handleUpdateBudget = async (id: string, updates: Partial<Budget>) => {
+  //   try {
+  //     console.log(`✏️ Updating budget ${id} with`, updates);
+  //     const updated = await budgetService.updateBudget(id, updates);
+  //     setBudgets(prev => prev.map(b => b._id === id ? updated : b));
+  //     toast({ title: "Budget updated", description: "Updated successfully." });
+  //   } catch (error) {
+  //     console.error('❌ Failed to update budget:', error);
+  //     toast({ title: "Error", description: "Failed to update budget.", variant: "destructive" });
+  //   }
+  // };
 
-  const handleDeleteBudget = async (id: string) => {
-    try {
-      console.log(`🗑️ Deleting budget: ${id}`);
-      await budgetService.deleteBudget(id);
-      setBudgets(prev => prev.filter(b => b._id !== id));
-      toast({ title: "Budget deleted", description: "The budget has been removed." });
-    } catch (error) {
-      console.error('❌ Failed to delete budget:', error);
-      toast({ title: "Error", description: "Failed to delete budget.", variant: "destructive" });
-    }
-  };
+  // const handleDeleteBudget = async (id: string) => {
+  //   try {
+  //     console.log(`🗑️ Deleting budget: ${id}`);
+  //     await budgetService.deleteBudget(id);
+  //     setBudgets(prev => prev.filter(b => b._id !== id));
+  //     toast({ title: "Budget deleted", description: "The budget has been removed." });
+  //   } catch (error) {
+  //     console.error('❌ Failed to delete budget:', error);
+  //     toast({ title: "Error", description: "Failed to delete budget.", variant: "destructive" });
+  //   }
+  // };
 
   if (error) {
     return <div className="p-4"><ErrorState title="Failed to load application" message={error} onRetry={() => window.location.reload()} retryLabel="Reload App" /></div>;
