@@ -6,9 +6,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { categories } from '../../data/mockData';
+import { categories } from '../../data/categories';
 import { Budget } from '../../types/finance';
 import { Plus, X, Target } from 'lucide-react';
+
 
 interface BudgetFormProps {
   onSubmit: (budget: Omit<Budget, '_id'>) => void;

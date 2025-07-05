@@ -1,11 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Transaction, Budget } from '../../types/finance';
 
-import { transactionService } from '../../services/transactionService';
-import { budgetService } from '../../services/budgetService'; 
 import {
   DollarSign, TrendingUp, TrendingDown, Calendar, Target, Wallet,
   ArrowUpRight, ArrowDownRight
@@ -18,8 +15,8 @@ interface DashboardProps {
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ transactions: initialTransactions, budgets: initialBudgets }) => {
-  const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
-  const [budgets, setBudgets] = useState<Budget[]>(initialBudgets);
+  const [transactions] = useState<Transaction[]>(initialTransactions);
+  const [budgets] = useState<Budget[]>(initialBudgets);
 
   const currentMonth = new Date().toISOString().slice(0, 7);
 
@@ -38,8 +35,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ transactions: initialTrans
       acc[transaction.category] = {
         amount: 0,
         count: 0,
-        color: '#85929E' // or fetch color dynamically later
-
+        color: '#85929E'
       };
     }
     acc[transaction.category].amount += transaction.amount;
@@ -55,11 +51,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ transactions: initialTrans
       Travel: '#F3722C',
       Shopping: '#F8961E',
       Entertainment: '#90BE6D',
-      // Add more as needed
     };
     return categoryColors[category] || '#85929E';
   };
-  
 
   const formatAmount = (amount: number, type?: 'income' | 'expense') => {
     const color = type === 'income' ? 'text-green-600' : type === 'expense' ? 'text-red-600' : 'text-foreground';

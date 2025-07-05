@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { categories } from '../../data/mockData';
+import { categories } from '../../data/categories';
 import { Transaction } from '../../types/finance';
 import { Plus, X } from 'lucide-react';
 
@@ -75,15 +75,15 @@ export const TransactionForm = ({
     e.preventDefault();
   
     if (validateForm()) {
-      const payload = {
-        title: formData.title.trim(), // <-- add this line
-        amount: Number(formData.amount),
-        date: formData.date,
-        description: formData.description.trim(),
-        category: formData.category,
-        type: formData.type,
-      };
-      
+     const payload = {
+  title: formData.title.trim(), // <-- add this line
+  amount: Number(formData.amount),
+  date: formData.date,
+  description: formData.description.trim(),
+  category: formData.category,
+  type: formData.type,
+};
+
       
       console.log('📤 Submitting transaction:', payload);
       onSubmit(payload);
