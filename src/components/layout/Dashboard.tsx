@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-// Removed: import { TransactionForm } from './TransactionForm';
 import { Transaction, Budget } from '../../types/finance';
 import { categories } from '../../data/mockData';
 import { transactionService } from '../../services/transactionService';
@@ -10,67 +9,46 @@ import { budgetService } from '../../services/budgetService';
 import {
   DollarSign, TrendingUp, TrendingDown, Calendar, Target, Wallet,
   ArrowUpRight, ArrowDownRight
-  // Removed: Plus
 } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface DashboardProps {
-  budgets?: Budget[]; // optional since you're fetching in useEffect
+  transactions: Transaction[];
+  budgets: Budget[];
 }
 
-export const Dashboard: React.FC<DashboardProps> = () => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [budgets, setBudgets] = useState<Budget[]>([]);
-  // Removed: const [showForm, setShowForm] = useState(false);
+export const Dashboard: React.FC<DashboardProps> = ({ transactions: initialTransactions, budgets: initialBudgets }) => {
+  const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
+  const [budgets, setBudgets] = useState<Budget[]>(initialBudgets);
 
   const currentMonth = new Date().toISOString().slice(0, 7);
 
-
-  const totalIncome = transactions
-    .filter(t => t.type === 'income')
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const totalExpenses = transactions
-    .filter(t => t.type === 'expense')
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const monthlyExpenses = transactions
-    .filter(t => t.type === 'expense' && t.date.startsWith(currentMonth))
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const monthlyIncome = transactions
-    .filter(t => t.type === 'income' && t.date.startsWith(currentMonth))
-    .reduce((sum, t) => sum + t.amount, 0);
+  const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+  const totalExpenses = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+  const monthlyExpenses = transactions.filter(t => t.type === 'expense' && t.date.startsWith(currentMonth)).reduce((sum, t) => sum + t.amount, 0);
+  const monthlyIncome = transactions.filter(t => t.type === 'income' && t.date.startsWith(currentMonth)).reduce((sum, t) => sum + t.amount, 0);
 
   const netWorth = totalIncome - totalExpenses;
   const monthlyNet = monthlyIncome - monthlyExpenses;
 
-  const recentTransactions = [...transactions]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 3);
+  const recentTransactions = [...transactions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 3);
 
-  const categoryBreakdown = transactions
-    .filter(t => t.type === 'expense' && t.date.startsWith(currentMonth))
-    .reduce((acc, transaction) => {
-      if (!acc[transaction.category]) {
-        acc[transaction.category] = {
-          amount: 0,
-          count: 0,
-          color: categories.find(c => c.name === transaction.category)?.color || '#85929E'
-        };
-      }
-      acc[transaction.category].amount += transaction.amount;
-      acc[transaction.category].count += 1;
-      return acc;
-    }, {} as Record<string, { amount: number; count: number; color: string }>);
+  const categoryBreakdown = transactions.filter(t => t.type === 'expense' && t.date.startsWith(currentMonth)).reduce((acc, transaction) => {
+    if (!acc[transaction.category]) {
+      acc[transaction.category] = {
+        amount: 0,
+        count: 0,
+        color: categories.find(c => c.name === transaction.category)?.color || '#85929E'
+      };
+    }
+    acc[transaction.category].amount += transaction.amount;
+    acc[transaction.category].count += 1;
+    return acc;
+  }, {} as Record<string, { amount: number; count: number; color: string }>);
 
-  const topCategories = Object.entries(categoryBreakdown)
-    .sort(([, a], [, b]) => b.amount - a.amount)
-    .slice(0, 4);
+  const topCategories = Object.entries(categoryBreakdown).sort(([, a], [, b]) => b.amount - a.amount).slice(0, 4);
 
-  const getCategoryColor = (categoryName: string) => {
-    return categories.find(c => c.name === categoryName)?.color || '#85929E';
-  };
+  const getCategoryColor = (categoryName: string) => categories.find(c => c.name === categoryName)?.color || '#85929E';
 
   const formatAmount = (amount: number, type?: 'income' | 'expense') => {
     const color = type === 'income' ? 'text-green-600' : type === 'expense' ? 'text-red-600' : 'text-foreground';
@@ -78,28 +56,6 @@ export const Dashboard: React.FC<DashboardProps> = () => {
     return <span className={color}>{sign}${amount.toFixed(2)}</span>;
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [txns, budgetList] = await Promise.all([
-          transactionService.getAllTransactions(),
-          budgetService.getBudgetsByMonth(currentMonth)
-        ]);
-  
-        console.log("Transactions fetched:", Array.isArray(txns) ? txns : txns?.data);
- // <- Add this
-        console.log("Budgets fetched:", budgetList);
-  
-        setTransactions(txns);
-        setBudgets(budgetList);
-      } catch (error) {
-        console.error('Failed to fetch data:', error);
-      }
-    };
-  
-    fetchData();
-  }, []);
-  
   const currentBudgets = budgets.filter(b => b.month === currentMonth);
   const budgetInsights = currentBudgets.map(budget => {
     const spent = categoryBreakdown[budget.category]?.amount || 0;

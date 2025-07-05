@@ -1,5 +1,5 @@
 export interface Transaction {
-  id: string;
+  _id: string;
   amount: number;
   date: string;
   description: string;
@@ -8,14 +8,14 @@ export interface Transaction {
 }
 
 export interface Budget {
-  id: string;
+  _id: string;
   category: string;
   amount: number;
   month: string;
 }
 
 export interface Category {
-  id: string;
+  _id: string;
   name: string;
   color: string;
   icon: string;
