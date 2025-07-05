@@ -7,7 +7,7 @@ const API_URL = 'https://finance-backend-0rb2.onrender.com/api/budgets';
 
 export const budgetService = {
   // Add a new budget
-  async addBudget(budget: Omit<Budget, 'id'>): Promise<Budget> {
+  async addBudget(budget: Omit<Budget, '_id'>): Promise<Budget> {
     try {
       const response = await axios.post<Budget>(API_URL, budget);
       return response.data;

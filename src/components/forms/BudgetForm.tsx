@@ -11,7 +11,7 @@ import { Budget } from '../../types/finance';
 import { Plus, X, Target } from 'lucide-react';
 
 interface BudgetFormProps {
-  onSubmit: (budget: Omit<Budget, 'id'>) => void;
+  onSubmit: (budget: Omit<Budget, '_id'>) => void;
   onCancel?: () => void;
   initialData?: Partial<Budget>;
   isEditing?: boolean;

@@ -2,8 +2,20 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { categories } from '../../data/mockData';
@@ -11,11 +23,12 @@ import { Transaction } from '../../types/finance';
 import { Plus, X } from 'lucide-react';
 
 interface TransactionFormProps {
-  onSubmit: (transaction: Omit<Transaction, 'id'>) => void;
+  onSubmit: (transaction: Omit<Transaction, '_id'>) => void;
   onCancel?: () => void;
   initialData?: Partial<Transaction>;
   isEditing?: boolean;
 }
+
 
 export const TransactionForm = ({
   onSubmit,
@@ -24,12 +37,14 @@ export const TransactionForm = ({
   isEditing = false,
 }: TransactionFormProps) => {
   const [formData, setFormData] = useState({
+    title: initialData?.title || '',
     amount: initialData?.amount?.toString() || '',
     date: initialData?.date || new Date().toISOString().split('T')[0],
     description: initialData?.description || '',
     category: initialData?.category || '',
     type: initialData?.type || 'expense' as 'income' | 'expense',
   });
+  
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -58,24 +73,30 @@ export const TransactionForm = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+  
     if (validateForm()) {
-      onSubmit({
+      const payload = {
+        title: formData.title.trim(), // <-- add this line
         amount: Number(formData.amount),
         date: formData.date,
         description: formData.description.trim(),
         category: formData.category,
         type: formData.type,
-      });
+      };
+      
+      
+      console.log('📤 Submitting transaction:', payload);
+      onSubmit(payload);
     }
-  };
-
+  }; // ✅ this closes handleSubmit properly
+  
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
   };
+  
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
@@ -175,7 +196,7 @@ export const TransactionForm = ({
                 {categories.map((category) => (
                   <SelectItem key={category.id} value={category.name}>
                     <div className="flex items-center gap-2">
-                      <div 
+                      <div
                         className="w-3 h-3 rounded-full"
                         style={{ backgroundColor: category.color }}
                       />
@@ -194,10 +215,10 @@ export const TransactionForm = ({
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">Selected category:</span>
               <Badge variant="secondary" className="gap-1">
-                <div 
+                <div
                   className="w-2 h-2 rounded-full"
-                  style={{ 
-                    backgroundColor: categories.find(c => c.name === formData.category)?.color 
+                  style={{
+                    backgroundColor: categories.find(c => c.name === formData.category)?.color
                   }}
                 />
                 {formData.category}

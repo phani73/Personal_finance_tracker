@@ -2,7 +2,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recha
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Transaction } from '../../types/finance';
-import { categories } from '../../data/mockData';
+
 import { PieChart as PieChartIcon } from 'lucide-react';
 
 interface CategoryPieChartProps {
@@ -18,7 +18,8 @@ export const CategoryPieChart = ({ transactions }: CategoryPieChartProps) => {
         acc[category] = {
           name: category,
           value: 0,
-          color: categories.find(c => c.name === category)?.color || '#85929E'
+          color: '#85929E' // or fetch color dynamically later
+
         };
       }
       acc[category].value += transaction.amount;

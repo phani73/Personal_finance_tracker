@@ -1,21 +1,23 @@
-export interface Transaction {
+export type Transaction = {
   _id: string;
+  title: string;
   amount: number;
+  category: string;
   date: string;
-  description: string;
-  category: string;
   type: 'income' | 'expense';
-}
+  description?: string;
+};
 
-export interface Budget {
+export type Budget = {
   _id: string;
   category: string;
   amount: number;
-  month: string;
-}
+  month: string; // Add this line
+};
+
 
 export interface Category {
-  _id: string;
+  id: string;
   name: string;
   color: string;
   icon: string;

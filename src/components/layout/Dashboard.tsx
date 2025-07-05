@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Transaction, Budget } from '../../types/finance';
-import { categories } from '../../data/mockData';
+
 import { transactionService } from '../../services/transactionService';
 import { budgetService } from '../../services/budgetService'; 
 import {
@@ -38,7 +38,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ transactions: initialTrans
       acc[transaction.category] = {
         amount: 0,
         count: 0,
-        color: categories.find(c => c.name === transaction.category)?.color || '#85929E'
+        color: '#85929E' // or fetch color dynamically later
+
       };
     }
     acc[transaction.category].amount += transaction.amount;
@@ -48,7 +49,17 @@ export const Dashboard: React.FC<DashboardProps> = ({ transactions: initialTrans
 
   const topCategories = Object.entries(categoryBreakdown).sort(([, a], [, b]) => b.amount - a.amount).slice(0, 4);
 
-  const getCategoryColor = (categoryName: string) => categories.find(c => c.name === categoryName)?.color || '#85929E';
+  const getCategoryColor = (category: string) => {
+    const categoryColors: Record<string, string> = {
+      Food: '#F94144',
+      Travel: '#F3722C',
+      Shopping: '#F8961E',
+      Entertainment: '#90BE6D',
+      // Add more as needed
+    };
+    return categoryColors[category] || '#85929E';
+  };
+  
 
   const formatAmount = (amount: number, type?: 'income' | 'expense') => {
     const color = type === 'income' ? 'text-green-600' : type === 'expense' ? 'text-red-600' : 'text-foreground';
@@ -161,7 +172,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ transactions: initialTrans
             ) : (
               <div className="space-y-4">
                 {recentTransactions.map(transaction => (
-                  <div key={transaction.id} className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors">
+                  <div key={transaction._id} className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors">
                     <div className="flex items-center space-x-3">
                       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: getCategoryColor(transaction.category) }} />
                       <div>
@@ -248,7 +259,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ transactions: initialTrans
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {budgetInsights.map(budget => (
-                <div key={budget.id} className="p-4 border rounded-lg space-y-3">
+                <div key={budget._id} className="p-4 border rounded-lg space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: getCategoryColor(budget.category) }} />

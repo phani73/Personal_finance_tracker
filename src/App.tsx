@@ -67,7 +67,8 @@ function App() {
     fetchBudgets();
   }, []);
 
-  const handleAddTransaction = async (transaction: Omit<Transaction, 'id'>) => {
+  const handleAddTransaction = async (transaction: Omit<Transaction, '_id'>) => {
+
     try {
       console.log('➕ Adding transaction:', transaction);
       const savedTransaction = await transactionService.addTransaction(transaction);
@@ -87,7 +88,8 @@ function App() {
     try {
       console.log(`✏️ Updating transaction ${id} with`, updates);
       const updated = await transactionService.updateTransaction(id, updates);
-      setTransactions(prev => prev.map(tx => tx.id === id ? updated.data : tx));
+      setTransactions(prev => prev.map(tx => tx._id === id ? updated : tx));
+
       toast({ title: "Transaction updated", description: "Updated successfully." });
     } catch (error) {
       console.error('❌ Failed to update transaction:', error);
@@ -99,7 +101,7 @@ function App() {
     try {
       console.log(`🗑️ Deleting transaction: ${id}`);
       await transactionService.deleteTransaction(id);
-      setTransactions(prev => prev.filter(tx => tx.id !== id));
+      setTransactions(prev => prev.filter(tx => tx._id !== id));
       toast({ title: "Transaction deleted", description: "The transaction has been removed from your records." });
     } catch (error) {
       console.error('❌ Failed to delete transaction:', error);
@@ -107,10 +109,12 @@ function App() {
     }
   };
 
-  const handleAddBudget = async (budget: Omit<Budget, 'id'>) => {
+  const handleAddBudget = async (budget: Omit<Budget, '_id'>) => {
+
     try {
       console.log('➕ Adding budget:', budget);
       const savedBudget = await budgetService.addBudget(budget);
+      console.log(savedBudget)
       setBudgets(prev => [...prev, savedBudget]);
       setShowBudgetDialog(false);
       toast({ title: "Budget set", description: `Budget of $${budget.amount} set for ${budget.category}.` });
@@ -124,7 +128,7 @@ function App() {
     try {
       console.log(`✏️ Updating budget ${id} with`, updates);
       const updated = await budgetService.updateBudget(id, updates);
-      setBudgets(prev => prev.map(b => b.id === id ? updated : b));
+      setBudgets(prev => prev.map(b => b._id === id ? updated : b));
       toast({ title: "Budget updated", description: "Updated successfully." });
     } catch (error) {
       console.error('❌ Failed to update budget:', error);
@@ -136,7 +140,7 @@ function App() {
     try {
       console.log(`🗑️ Deleting budget: ${id}`);
       await budgetService.deleteBudget(id);
-      setBudgets(prev => prev.filter(b => b.id !== id));
+      setBudgets(prev => prev.filter(b => b._id !== id));
       toast({ title: "Budget deleted", description: "The budget has been removed." });
     } catch (error) {
       console.error('❌ Failed to delete budget:', error);
@@ -186,6 +190,7 @@ function App() {
 
           <TabsContent value="transactions">
             <TransactionList transactions={transactions} onUpdate={handleUpdateTransaction} onDelete={handleDeleteTransaction} loading={loading} />
+           
           </TabsContent>
 
           <TabsContent value="analytics">
