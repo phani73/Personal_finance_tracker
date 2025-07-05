@@ -1,6 +1,66 @@
-#root {
+/* App.css */
+
+/* Remove or comment out this #root rule if it's causing issues.
+   If you have a max-width for the overall app, apply it to a div inside #root,
+   not to #root itself. */
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+} */
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  /* REMOVED: overflow-x: hidden; as it caused desktop problems */
+}
+
+/* This is correct and should remain */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  /* Safari and Chrome */
+}
+
+button.group svg.lucide {
+  color: white !important;
+  /* Corrected typo: 'color: white' */
+}
+
+/* Ensure the ghost button itself has a dark background on hover, focus, and ACTIVE (clicked) states */
+.group:hover,
+.group:focus,
+.group:active {
+  /* ADD THIS LINE: .group:active */
+  background-color: var(--accent) !important;
+  /* Use !important to ensure it overrides shadcn's active state */
+  /* If --accent doesn't give a dark enough color, you can use: */
+  /* background-color: #333 !important; */
+  /* A darker grey */
+  /* background-color: rgb(55 65 81) !important; */
+  /* Equivalent to gray-700 from Tailwind */
+}
+
+/* Also ensure the icon is white if the button is focused (e.g., via tab key) */
+.group:focus svg.lucide {
+  color: white !important;
+  /* Corrected typo: 'color: white' */
+}
+
+/* NEW ADDITION: Ensure icon remains white on active state too */
+.group:active svg.lucide {
+  /* ADD THIS BLOCK */
+  color: white !important;
 }

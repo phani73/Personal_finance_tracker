@@ -21,10 +21,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Edit2, Trash2, Calendar, DollarSign, Tag, TrendingUp, TrendingDown } from 'lucide-react';
+
+// Import Font Awesome
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPenToSquare as faRegularPenToSquare } from '@fortawesome/free-regular-svg-icons'; // Regular style for edit
+import { faTrash as faSolidTrash } from '@fortawesome/free-solid-svg-icons'; // Solid style for trash
+
+// Other lucide icons might still be in use elsewhere in the component, so keep them if needed,
+// but for Edit/Trash, we're replacing them.
+import { Calendar, DollarSign, Tag, TrendingUp, TrendingDown } from 'lucide-react';
+
 import { format } from 'date-fns';
 import { TransactionForm } from '../forms/TransactionForm';
 import { Transaction } from '../../types/finance';
+import "../../App.css"
 
 type TransactionListProps = {
   transactions: Transaction[];
@@ -67,7 +77,7 @@ export const TransactionList = ({ transactions, onUpdate, onDelete, loading }: T
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h3 className="text-lg font-semibold">Transaction History</h3>
           <p className="text-sm text-muted-foreground">
@@ -85,9 +95,9 @@ export const TransactionList = ({ transactions, onUpdate, onDelete, loading }: T
           {transactions.map((transaction) => (
             <Card key={transaction._id} className="hover:shadow-md transition-shadow">
               <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-muted">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+                  <div className="flex items-center space-x-3 sm:space-x-4 flex-grow">
+                    <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-muted flex-shrink-0">
                       {transaction.type === 'income' ? (
                         <TrendingUp size={20} className="text-green-600" />
                       ) : (
@@ -96,9 +106,9 @@ export const TransactionList = ({ transactions, onUpdate, onDelete, loading }: T
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
                         <h4 className="font-medium text-foreground truncate">{transaction.description}</h4>
-                        <Badge variant="secondary" className="gap-1 text-xs">
+                        <Badge variant="secondary" className="gap-1 text-xs sm:mt-0">
                           <div
                             className="w-2 h-2 rounded-full"
                             style={{ backgroundColor: getCategoryColor(transaction.category) }}
@@ -106,10 +116,10 @@ export const TransactionList = ({ transactions, onUpdate, onDelete, loading }: T
                           {transaction.category}
                         </Badge>
                       </div>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                         <div className="flex items-center gap-1">
                           <Calendar size={14} />
-                          {format(new Date(transaction.date), 'MMM dd, yyyy')}
+                          {format(new Date(transaction.date), 'MMM dd,yyyy')}
                         </div>
                         <div className="flex items-center gap-1">
                           <Tag size={14} />
@@ -119,7 +129,7 @@ export const TransactionList = ({ transactions, onUpdate, onDelete, loading }: T
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center sm:gap-3 mt-2 sm:mt-0">
                     <div className="text-right">
                       <div className="flex items-center gap-1">
                         <DollarSign size={16} className="text-muted-foreground" />
@@ -127,7 +137,7 @@ export const TransactionList = ({ transactions, onUpdate, onDelete, loading }: T
                       </div>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-1 sm:gap-2">
                       <Dialog
                         open={editingTransaction?._id === transaction._id}
                         onOpenChange={(open) => {
@@ -137,10 +147,17 @@ export const TransactionList = ({ transactions, onUpdate, onDelete, loading }: T
                         <DialogTrigger asChild>
                           <Button
                             variant="ghost"
-                            size="sm"
+                            size="icon"
                             onClick={() => setEditingTransaction(transaction)}
+                            className="group"
                           >
-                            <Edit2 size={16} />
+                            {/* Replace Edit2 with FontAwesomeIcon */}
+                            <FontAwesomeIcon
+                              icon={faRegularPenToSquare}
+                              size="sm" // Corresponds roughly to 16px. Use "xs", "sm", "lg", "xl", "2x", etc.
+                              // Tailwind classes can still be used here for color, but CSS will be stronger
+                              className="group-hover:text-white group-focus:text-white"
+                            />
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="max-w-2xl">
@@ -159,8 +176,18 @@ export const TransactionList = ({ transactions, onUpdate, onDelete, loading }: T
 
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <Trash2 size={16} />
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="group"
+                          >
+                            {/* Replace Trash2 with FontAwesomeIcon */}
+                            <FontAwesomeIcon
+                              icon={faSolidTrash}
+                              size="sm" // Corresponds roughly to 16px. Use "xs", "sm", "lg", "xl", "2x", etc.
+                              // Tailwind classes can still be used here for color, but CSS will be stronger
+                              className="group-hover:text-white group-focus:text-white"
+                            />
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>

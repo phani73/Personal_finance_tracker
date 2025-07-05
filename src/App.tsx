@@ -8,7 +8,7 @@ import { transactionService } from './services/transactionService';
 import { budgetService } from './services/budgetService';
 import { Dashboard } from './components/layout/Dashboard';
 import { TransactionForm } from './components/forms/TransactionForm';
-import { BudgetForm } from './components/forms/BudgetForm'; // Keep as is if path is correct
+import { BudgetForm } from './components/forms/BudgetForm';
 import { TransactionList } from './components/transactions/TransactionList';
 import { CategoryPieChart } from './components/charts/CategoryPieChart';
 import { MonthlyExpensesChart } from './components/charts/MonthlyExpensesChart';
@@ -18,7 +18,7 @@ import { EmptyState, BudgetsEmptyState } from './components/ui/empty-state';
 import { ErrorState } from './components/ui/error-state';
 import { Transaction, Budget } from './types/finance';
 import { Plus, LayoutDashboard, Receipt, Target, TrendingUp, BarChart3, Wallet } from 'lucide-react';
-import './App.css';
+import './App.css'; // Make sure this CSS file exists and contains the scrollbar-hide definition
 
 function App() {
   const { toast } = useToast();
@@ -121,30 +121,6 @@ function App() {
     }
   };
 
-  // const handleUpdateBudget = async (id: string, updates: Partial<Budget>) => {
-  //   try {
-  //     console.log(`✏️ Updating budget ${id} with`, updates);
-  //     const updated = await budgetService.updateBudget(id, updates);
-  //     setBudgets(prev => prev.map(b => b._id === id ? updated : b));
-  //     toast({ title: "Budget updated", description: "Updated successfully." });
-  //   } catch (error) {
-  //     console.error('❌ Failed to update budget:', error);
-  //     toast({ title: "Error", description: "Failed to update budget.", variant: "destructive" });
-  //   }
-  // };
-
-  // const handleDeleteBudget = async (id: string) => {
-  //   try {
-  //     console.log(`🗑️ Deleting budget: ${id}`);
-  //     await budgetService.deleteBudget(id);
-  //     setBudgets(prev => prev.filter(b => b._id !== id));
-  //     toast({ title: "Budget deleted", description: "The budget has been removed." });
-  //   } catch (error) {
-  //     console.error('❌ Failed to delete budget:', error);
-  //     toast({ title: "Error", description: "Failed to delete budget.", variant: "destructive" });
-  //   }
-  // };
-
   if (error) {
     return <div className="p-4"><ErrorState title="Failed to load application" message={error} onRetry={() => window.location.reload()} retryLabel="Reload App" /></div>;
   }
@@ -173,13 +149,61 @@ function App() {
         </header>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-flow-col auto-cols-max overflow-x-auto whitespace-nowrap md:grid-cols-4 lg:grid-cols-5 scrollbar-hide">
-            <TabsTrigger value="dashboard" className="gap-2 bg-black text-white hover:bg-gray-800"><LayoutDashboard size={16} /> Dashboard</TabsTrigger>
-            <TabsTrigger value="transactions" className="gap-2 bg-black text-white hover:bg-gray-800"><Receipt size={16} /> Transactions</TabsTrigger>
-            <TabsTrigger value="analytics" className="gap-2 bg-black text-white hover:bg-gray-800"><TrendingUp size={16} /> Analytics</TabsTrigger>
-            <TabsTrigger value="budgets" className="gap-2 bg-black text-white hover:bg-gray-800"><Target size={16} /> Budgets</TabsTrigger>
-            <TabsTrigger value="reports" className="gap-2 bg-black text-white hover:bg-gray-800"><BarChart3 size={16} /> Reports</TabsTrigger>
-          </TabsList>
+          {/* Responsive TabsList container */}
+          <div className="w-full overflow-x-auto scrollbar-hide md:overflow-x-visible">
+            <TabsList className="flex min-w-max md:w-full md:grid md:grid-cols-5 items-center justify-start rounded-md p-1 bg-black text-white">
+            <TabsTrigger
+                value="dashboard"
+                // --- CHANGE HERE ---
+                className="flex-shrink-0 min-w-[120px] md:min-w-0 md:flex-grow gap-2
+                           bg-gray-900 text-white hover:bg-gray-700
+                           data-[state=active]:bg-gray-800 data-[state=active]:text-white
+                           data-[state=active]:shadow-sm"
+              >
+                <LayoutDashboard size={16} /> Dashboard
+              </TabsTrigger>
+              <TabsTrigger
+                value="transactions"
+                // --- CHANGE HERE ---
+                className="flex-shrink-0 min-w-[120px] md:min-w-0 md:flex-grow gap-2
+                           bg-gray-900 text-white hover:bg-gray-700
+                           data-[state=active]:bg-gray-800 data-[state=active]:text-white
+                           data-[state=active]:shadow-sm"
+              >
+                <Receipt size={16} /> Transactions
+              </TabsTrigger>
+              <TabsTrigger
+                value="analytics"
+                // --- CHANGE HERE ---
+                className="flex-shrink-0 min-w-[120px] md:min-w-0 md:flex-grow gap-2
+                           bg-gray-900 text-white hover:bg-gray-700
+                           data-[state=active]:bg-gray-800 data-[state=active]:text-white
+                           data-[state=active]:shadow-sm"
+              >
+                <TrendingUp size={16} /> Analytics
+              </TabsTrigger>
+              <TabsTrigger
+                value="budgets"
+                // --- CHANGE HERE ---
+                className="flex-shrink-0 min-w-[120px] md:min-w-0 md:flex-grow gap-2
+                           bg-gray-900 text-white hover:bg-gray-700
+                           data-[state=active]:bg-gray-800 data-[state=active]:text-white
+                           data-[state=active]:shadow-sm"
+              >
+                <Target size={16} /> Budgets
+              </TabsTrigger>
+              <TabsTrigger
+                value="reports"
+                // --- CHANGE HERE ---
+                className="flex-shrink-0 min-w-[120px] md:min-w-0 md:flex-grow gap-2
+                           bg-gray-900 text-white hover:bg-gray-700
+                           data-[state=active]:bg-gray-800 data-[state=active]:text-white
+                           data-[state=active]:shadow-sm"
+              >
+                <BarChart3 size={16} /> Reports
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="dashboard">
             {loading ? <LoadingSkeleton /> : transactions.length === 0 ? <EmptyState type="dashboard" onAction={() => setShowTransactionDialog(true)} actionLabel="Add First Transaction" /> : <Dashboard transactions={transactions} budgets={budgets} />}
