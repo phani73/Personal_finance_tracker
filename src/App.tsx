@@ -176,12 +176,12 @@ function App() {
         </header>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
-            <TabsTrigger value="dashboard" className="gap-2"><LayoutDashboard size={16} /> Dashboard</TabsTrigger>
-            <TabsTrigger value="transactions" className="gap-2"><Receipt size={16} /> Transactions</TabsTrigger>
-            <TabsTrigger value="analytics" className="gap-2"><TrendingUp size={16} /> Analytics</TabsTrigger>
-            <TabsTrigger value="budgets" className="gap-2"><Target size={16} /> Budgets</TabsTrigger>
-            <TabsTrigger value="reports" className="gap-2"><BarChart3 size={16} /> Reports</TabsTrigger>
+          <TabsList className="grid grid-flow-col auto-cols-max overflow-x-auto whitespace-nowrap md:grid-cols-4 lg:grid-cols-5 scrollbar-hide"> {/* MODIFIED LINE */}
+            <TabsTrigger value="dashboard" className="gap-2 bg-black text-white hover:bg-gray-800"><LayoutDashboard size={16} /> Dashboard</TabsTrigger>
+            <TabsTrigger value="transactions" className="gap-2 bg-black text-white hover:bg-gray-800"><Receipt size={16} /> Transactions</TabsTrigger>
+            <TabsTrigger value="analytics" className="gap-2 bg-black text-white hover:bg-gray-800"><TrendingUp size={16} /> Analytics</TabsTrigger>
+            <TabsTrigger value="budgets" className="gap-2 bg-black text-white hover:bg-gray-800"><Target size={16} /> Budgets</TabsTrigger>
+            <TabsTrigger value="reports" className="gap-2 bg-black text-white hover:bg-gray-800"><BarChart3 size={16} /> Reports</TabsTrigger>
           </TabsList>
 
           <TabsContent value="dashboard">
