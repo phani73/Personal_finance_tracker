@@ -8,7 +8,7 @@ import { transactionService } from './services/transactionService';
 import { budgetService } from './services/budgetService';
 import { Dashboard } from './components/layout/Dashboard';
 import { TransactionForm } from './components/forms/TransactionForm';
-import { BudgetForm } from './components/forms/BudgetForm';
+import { BudgetForm } from './components/forms/BudgetForm'; // Keep as is if path is correct
 import { TransactionList } from './components/transactions/TransactionList';
 import { CategoryPieChart } from './components/charts/CategoryPieChart';
 import { MonthlyExpensesChart } from './components/charts/MonthlyExpensesChart';
@@ -37,9 +37,8 @@ function App() {
       console.log('🔄 Fetching transactions...');
       setLoading(true);
       const res = await transactionService.getAllTransactions();
-      console.log('✅ Transactions fetched:', res); // ✅ correct
-      setTransactions(res); // ✅ correct
-      
+      console.log('✅ Transactions fetched:', res);
+      setTransactions(res);
     } catch (err) {
       console.error('❌ Failed to load transactions:', err);
       setError('Failed to load transactions');
@@ -68,7 +67,6 @@ function App() {
   }, []);
 
   const handleAddTransaction = async (transaction: Omit<Transaction, '_id'>) => {
-
     try {
       console.log('➕ Adding transaction:', transaction);
       const savedTransaction = await transactionService.addTransaction(transaction);
@@ -110,7 +108,6 @@ function App() {
   };
 
   const handleAddBudget = async (budget: Omit<Budget, '_id'>) => {
-
     try {
       console.log('➕ Adding budget:', budget);
       const savedBudget = await budgetService.addBudget(budget);
@@ -176,7 +173,7 @@ function App() {
         </header>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-flow-col auto-cols-max overflow-x-auto whitespace-nowrap md:grid-cols-4 lg:grid-cols-5 scrollbar-hide"> {/* MODIFIED LINE */}
+          <TabsList className="grid grid-flow-col auto-cols-max overflow-x-auto whitespace-nowrap md:grid-cols-4 lg:grid-cols-5 scrollbar-hide">
             <TabsTrigger value="dashboard" className="gap-2 bg-black text-white hover:bg-gray-800"><LayoutDashboard size={16} /> Dashboard</TabsTrigger>
             <TabsTrigger value="transactions" className="gap-2 bg-black text-white hover:bg-gray-800"><Receipt size={16} /> Transactions</TabsTrigger>
             <TabsTrigger value="analytics" className="gap-2 bg-black text-white hover:bg-gray-800"><TrendingUp size={16} /> Analytics</TabsTrigger>
@@ -190,7 +187,6 @@ function App() {
 
           <TabsContent value="transactions">
             <TransactionList transactions={transactions} onUpdate={handleUpdateTransaction} onDelete={handleDeleteTransaction} loading={loading} />
-           
           </TabsContent>
 
           <TabsContent value="analytics">
