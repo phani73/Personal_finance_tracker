@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { categories } from '../../data/categories';
 import { Budget } from '../../types/finance';
-import { Plus, X, Target } from 'lucide-react';
+import {  X, Target } from 'lucide-react';
 
 
 interface BudgetFormProps {
