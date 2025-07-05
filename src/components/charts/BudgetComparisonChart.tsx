@@ -11,7 +11,7 @@ interface BudgetComparisonChartProps {
 
 export const BudgetComparisonChart = ({ transactions, budgets }: BudgetComparisonChartProps) => {
   const currentMonth = new Date().toISOString().slice(0, 7);
-  
+
   const monthlyExpenses = transactions
     .filter(t => t.type === 'expense' && t.date.startsWith(currentMonth))
     .reduce((acc, transaction) => {
@@ -23,12 +23,12 @@ export const BudgetComparisonChart = ({ transactions, budgets }: BudgetCompariso
     .filter(b => b.month === currentMonth)
     .map(budget => {
       const actual = monthlyExpenses[budget.category] || 0;
-      const percentage = (actual / budget.amount) * 100;
+      const percentage = (actual / budget.amount) * 100; // This 'percentage' is used later in the object
       let status: 'over' | 'under' | 'on-track' = 'under';
-      
+
       if (percentage > 100) status = 'over';
       else if (percentage > 80) status = 'on-track';
-      
+
       return {
         category: budget.category,
         budget: budget.amount,
@@ -58,10 +58,10 @@ export const BudgetComparisonChart = ({ transactions, budgets }: BudgetCompariso
     }
   };
 
-  const getStatusBadge = (status: string, percentage: number) => {
+  const getStatusBadge = (status: string) => {
     const variant = status === 'over' ? 'destructive' : status === 'on-track' ? 'secondary' : 'default';
     const text = status === 'over' ? 'Over Budget' : status === 'on-track' ? 'On Track' : 'Under Budget';
-    
+
     return (
       <Badge variant={variant} className="gap-1">
         {getStatusIcon(status)}
@@ -156,15 +156,15 @@ export const BudgetComparisonChart = ({ transactions, budgets }: BudgetCompariso
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="category" 
+            <XAxis
+              dataKey="category"
               fontSize={12}
               tick={{ fill: 'hsl(var(--muted-foreground))' }}
               angle={-45}
               textAnchor="end"
               height={80}
             />
-            <YAxis 
+            <YAxis
               fontSize={12}
               tick={{ fill: 'hsl(var(--muted-foreground))' }}
               tickFormatter={(value) => `$${value}`}
@@ -186,7 +186,7 @@ export const BudgetComparisonChart = ({ transactions, budgets }: BudgetCompariso
               <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                 <div className="flex items-center gap-3">
                   <span className="font-medium">{item.category}</span>
-                  {getStatusBadge(item.status, (item.actual / item.budget) * 100)}
+                  {getStatusBadge(item.status)}
                 </div>
                 <div className="text-right">
                   <div className="text-sm font-medium">
